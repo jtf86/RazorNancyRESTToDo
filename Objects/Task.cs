@@ -1,15 +1,21 @@
-namespace todo.Objects
+using System;
+using System.Collections.Generic;
+
+namespace ToDoList
 {
-  using System;
-  using System.Collections.Generic;
 
   public class Task
   {
     private string description { get; set; }
+    private int id { get; set; }
+
+    private static List<Task> instances = new List<Task> {};
 
     public Task(string new_description)
     {
       description = new_description;
+      instances.Add(this);
+      id = instances.Count;
     }
 
     public string GetDescription()
@@ -17,16 +23,24 @@ namespace todo.Objects
       return description;
     }
 
-    public static List<string> ListOfTasks = new List<string> {};
-
-    public void Save()
+    public int GetId()
     {
-      ListOfTasks.Add(this.GetDescription());
+      return id;
     }
 
-    public static void ClearAll()
+    public static List<Task> All()
     {
-      ListOfTasks.Clear();
+      return instances;
+    }
+
+    public static Task Find(int id)
+    {
+      return instances[id-1];
+    }
+
+    public static void DeleteAll()
+    {
+      instances.Clear();
     }
   }
 }

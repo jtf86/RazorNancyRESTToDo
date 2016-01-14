@@ -1,6 +1,5 @@
 using Nancy;
 using Nancy.ViewEngines.Razor;
-using todo.Objects;
 
 namespace ToDoList
 {
@@ -8,21 +7,25 @@ namespace ToDoList
   {
     public HomeModule()
     {
-      Get["/"] = _ => View["add_new_task.cshtml"];
-      Get["/view_all_tasks"] = _ => {
-        var allTasks = Task.ListOfTasks;
-        return View["view_all_tasks.cshtml", allTasks];
+      Get["/"] = _ => {
+        return View["index.cshtml"];
       };
-      Post["/task_added"] = _ => {
-        var NewTask = new Task (Request.Form["new-task"]);
-        NewTask.Save();
-        return View["task_added.cshtml", NewTask];
+      Get["/tasks"] = _ => {
+        var AllTasks = Task.All();
+        return View["tasks.cshtml", AllTasks];
       };
-      Post["/tasks_cleared"] = _ => {
-        Task.ClearAll();
-        return View["tasks_cleared.cshtml"];
+      Get["/tasks/new"] = _ => {
+        return View["task_form.cshtml"];
       };
-
+      Post["/tasks"] = _ => {
+        var NewTask = new Task(Request.Form["new-task"]);
+        var AllTasks = Task.All();
+        return View["tasks.cshtml", AllTasks];
+      };
+      Get["/tasks/{id}"] = parameters => {
+        var task = Task.Find(parameters.id);
+        return View["/task.cshtml", task];
+      };
     }
   }
 }
