@@ -1,3 +1,8 @@
 <h1>You've added a new task!</h1>
-<p>@Model.Description</p>
-<a href=”/”>Add another task</a>
+<p>@Model.GetDescription()</p>
+<form action="/">
+  <button type="submit" name="button">Add another task</button>
+</form>
+<form action="/view_all_tasks">
+  <button type="submit" name="button">View current tasks</button>
+</form>

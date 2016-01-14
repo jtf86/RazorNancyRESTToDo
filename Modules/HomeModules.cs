@@ -1,5 +1,5 @@
-using Nancy.ViewEngines.Razor;
 using Nancy;
+using Nancy.ViewEngines.Razor;
 using todo.Objects;
 
 namespace ToDoList
@@ -14,12 +14,15 @@ namespace ToDoList
         return View["view_all_tasks.cshtml", allTasks];
       };
       Post["/task_added"] = _ => {
-        Task NewTask = new Task{
-          Description = Request.Form["new-task"]
-        };
+        var NewTask = new Task (Request.Form["new-task"]);
         NewTask.Save();
         return View["task_added.cshtml", NewTask];
       };
+      Post["/tasks_cleared"] = _ => {
+        Task.ClearAll();
+        return View["tasks_cleared.cshtml"];
+      };
+
     }
   }
 }
