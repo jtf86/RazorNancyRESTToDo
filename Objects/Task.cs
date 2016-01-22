@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace ToDoList
 {
-
   public class Task
   {
     private string description { get; set; }
