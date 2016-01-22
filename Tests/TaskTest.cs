@@ -39,7 +39,7 @@ namespace ToDoList
       //Act
       var result = Task.GetAll();
       // foreach (Task thisTask in result) {
-      //   Console.WriteLine(thisTask.GetDescription());
+      //   Console.WriteLine("Output: " + thisTask.GetDescription());
       // }
 
       //Assert
