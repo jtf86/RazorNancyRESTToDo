@@ -38,7 +38,7 @@ namespace ToDoList
       tasks.Add(task);
     }
 
-    public static List<Category> All()
+    public static List<Category> GetAll()
     {
       return instances;
     }

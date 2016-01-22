@@ -5,13 +5,12 @@ using System.Collections.Generic;
 
 namespace ToDoList
 {
-  public class TaskTest
+  public class TaskTest : IDisposable
   {
-    //  : IDisposable
-    // public void Dispose()
-    // {
-    //   Task.DeleteAll();
-    // }
+    public void Dispose()
+    {
+      Task.DeleteAll();
+    }
 
     [Fact]
     public void GetDescription_WalkTheDog_pass()
@@ -28,7 +27,7 @@ namespace ToDoList
     }
 
     [Fact]
-    public void GetAll_pass()
+    public void GetAll_WalkTheDogAndWashTheDishes_pass()
     {
       //Arrange
       var description01 = "Walk the dog";
@@ -39,6 +38,9 @@ namespace ToDoList
 
       //Act
       var result = Task.GetAll();
+      // foreach (Task thisTask in result) {
+      //   Console.WriteLine(thisTask.GetDescription());
+      // }
 
       //Assert
       Assert.Equal(newList, result);
