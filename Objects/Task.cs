@@ -27,7 +27,7 @@ namespace ToDoList
       return id;
     }
 
-    public static List<Task> All()
+    public static List<Task> GetAll()
     {
       return instances;
     }

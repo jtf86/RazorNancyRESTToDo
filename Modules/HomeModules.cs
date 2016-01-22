@@ -12,7 +12,7 @@ namespace ToDoList
         return View["index.cshtml"];
       };
       Get["/categories"] = _ => {
-        var AllCategories = Category.All();
+        var AllCategories = Category.GetAll();
         return View["categories.cshtml", AllCategories];
       };
       Get["/categories/new"] = _ => {
@@ -20,7 +20,7 @@ namespace ToDoList
       };
       Post["/categories"] = _ => {
         var NewCategory = new Category(Request.Form["category-name"]);
-        var AllCategories = Category.All();
+        var AllCategories = Category.GetAll();
         return View["categories.cshtml", AllCategories];
       };
       Get["/categories/{id}"] = parameters => {
