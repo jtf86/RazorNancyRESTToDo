@@ -45,7 +45,5 @@ namespace ToDoList
       //Assert
       Assert.Equal(newList, result);
     }
-
-
   }
 }
