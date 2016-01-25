@@ -1,5 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System;
 
 namespace ToDoList
 {
@@ -10,16 +11,10 @@ namespace ToDoList
 
     private static List<Task> instances = new List<Task> {};
 
-    public Task(string new_description)
+    public Task(string Description, int Id = 0)
     {
-      description = new_description;
-      instances.Add(this);
-      id = instances.Count;
-    }
-
-    public string GetDescription()
-    {
-      return description;
+      id = Id;
+      description = Description;
     }
 
     public int GetId()
@@ -27,9 +22,45 @@ namespace ToDoList
       return id;
     }
 
+    public string GetDescription()
+    {
+      return description;
+    }
+
+    public void SetDescription(string newDescription)
+    {
+      description = newDescription;
+    }
+
     public static List<Task> GetAll()
     {
-      return instances;
+      List<Task> AllTasks = new List<Task>{};
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM tasks", conn);
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int taskId = rdr.GetInt32(0);
+        string taskDescription = rdr.GetString(1);
+        Task newTask = new Task(taskDescription, taskId);
+        AllTasks.Add(newTask);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return AllTasks;
     }
 
     public static Task Find(int id)
