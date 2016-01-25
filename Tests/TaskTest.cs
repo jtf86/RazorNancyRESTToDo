@@ -80,9 +80,8 @@ namespace ToDoList
 
       //Act
       Task foundTask = Task.Find(testTask.GetId());
-      Console.WriteLine(foundTask.GetDescription());
       //Assert
-      Assert.Equal(testTask.GetDescription(), foundTask.GetDescription());
+      Assert.Equal(testTask, foundTask);
     }
   }
 }
