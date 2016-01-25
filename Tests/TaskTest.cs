@@ -17,5 +17,15 @@ namespace ToDoList
     {
       Task.DeleteAll();
     }
+
+    [Fact]
+    public void Test_EmptyAtFirst()
+    {
+      //Arrange, Act
+      int result = Task.GetAll().Count;
+
+      //Assert
+      Assert.Equal(0, result);
+    }
   }
 }
