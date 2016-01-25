@@ -6,15 +6,32 @@ namespace ToDoList
 {
   public class Task
   {
-    private string description { get; set; }
-    private int id { get; set; }
+    private int id;
+    private string description;
+    private int categoryId;
 
     private static List<Task> instances = new List<Task> {};
 
-    public Task(string Description, int Id = 0)
+    public Task(string Description, int CategoryId, int Id = 0)
     {
       id = Id;
       description = Description;
+      categoryId = CategoryId;
+    }
+
+    public override bool Equals(System.Object otherTask)
+    {
+      if (!(otherTask is Task))
+      {
+        return false;
+      }
+      else {
+        Task newTask = (Task) otherTask;
+        bool idEquality = this.GetId() == newTask.GetId();
+        bool descriptionEquality = this.GetDescription() == newTask.GetDescription();
+        bool categoryEquality = this.GetCategoryId() == newTask.GetCategoryId();
+        return (idEquality && descriptionEquality && categoryEquality);
+      }
     }
 
     public int GetId()
@@ -32,18 +49,35 @@ namespace ToDoList
       description = newDescription;
     }
 
+    public int GetCategoryId()
+    {
+      return categoryId;
+    }
+
+    public void SetCategoryId(int newCategoryId)
+    {
+      categoryId = newCategoryId;
+    }
+
     public void Save()
     {
       SqlConnection conn = DB.Connection();
       SqlDataReader rdr;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO tasks (description) OUTPUT INSERTED.id VALUES (@TaskDescription)", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO tasks (description, categoryId) OUTPUT INSERTED.id VALUES (@TaskDescription, @TaskCategoryId)", conn);
 
-      SqlParameter param = new SqlParameter();
-      param.ParameterName = "@TaskDescription";
-      param.Value = this.GetDescription();
-      cmd.Parameters.Add(param);
+      SqlParameter descriptionParam = new SqlParameter();
+      descriptionParam.ParameterName = "@TaskDescription";
+      descriptionParam.Value = this.GetDescription();
+
+      SqlParameter categoryIdParam = new SqlParameter();
+      categoryIdParam.ParameterName = "@TaskCategoryId";
+      categoryIdParam.Value = this.GetCategoryId();
+
+      cmd.Parameters.Add(descriptionParam);
+      cmd.Parameters.Add(categoryIdParam);
+
       rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
@@ -60,7 +94,6 @@ namespace ToDoList
       }
     }
 
-
     public static List<Task> GetAll()
     {
       List<Task> AllTasks = new List<Task>{};
@@ -76,10 +109,10 @@ namespace ToDoList
       {
         int taskId = rdr.GetInt32(0);
         string taskDescription = rdr.GetString(1);
-        Task newTask = new Task(taskDescription, taskId);
+        int taskCategoryId = rdr.GetInt32(2);
+        Task newTask = new Task(taskDescription, taskCategoryId, taskId);
         AllTasks.Add(newTask);
       }
-
       if (rdr != null)
       {
         rdr.Close();
@@ -88,7 +121,6 @@ namespace ToDoList
       {
         conn.Close();
       }
-
       return AllTasks;
     }
 
@@ -107,13 +139,15 @@ namespace ToDoList
 
       int foundTaskId = 0;
       string foundTaskDescription = null;
+      int foundTaskCategoryId = 0;
 
       while(rdr.Read())
       {
         foundTaskId = rdr.GetInt32(0);
         foundTaskDescription = rdr.GetString(1);
+        foundTaskCategoryId = rdr.GetInt32(2);
       }
-      Task foundTask = new Task(foundTaskDescription, foundTaskId);
+      Task foundTask = new Task(foundTaskDescription, foundTaskCategoryId, foundTaskId);
 
       if (rdr != null)
       {
@@ -134,18 +168,5 @@ namespace ToDoList
       cmd.ExecuteNonQuery();
     }
 
-    public override bool Equals(System.Object otherTask)
-    {
-      if (!(otherTask is Task))
-      {
-        return false;
-      }
-      else {
-        Task newTask = (Task) otherTask;
-        bool idEquality = (this.GetId() == newTask.GetId());
-        bool descriptionEquality = (this.GetDescription() == newTask.GetDescription());
-        return (idEquality && descriptionEquality);
-      }
-    }
   }
 }
