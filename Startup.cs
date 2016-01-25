@@ -1,4 +1,4 @@
-namespace MadLibs
+namespace ToDoList
 {
   using System.IO;
   using Microsoft.AspNet.Builder;
@@ -6,6 +6,8 @@ namespace MadLibs
   using Nancy.Owin;
   using Nancy;
   using Nancy.ViewEngines.Razor;
+  using System.Data;
+  using System.Data.SqlClient;
 
   public class Startup
   {
@@ -39,5 +41,10 @@ namespace MadLibs
     {
       get { return false; }
     }
+  }
+
+  public static class DBConfiguration
+  {
+    public static string connectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=todo;Integrated Security=SSPI;";
   }
 }
